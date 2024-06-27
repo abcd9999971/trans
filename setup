@@ -1,0 +1,29 @@
+  var formans = FormApp.openById('1hV25eU_atVaSAio2xT0EVxAEJIwD7rUGGgBTCuycpQg');  
+  var formque = FormApp.openById('1nzGSLlsIXc44hDb7KbgV5jADedryPMS_Mnk_5kLcKV0');
+
+function onFormSubmit(e) {
+  var responsesSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("翻譯");  // 表單響應的工作表名稱
+  var passwordsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("翻譯");  // 存儲密碼和內容的工作表名稱
+
+  var inputPassword = e.values[1]; // 假設密碼輸入在第一個問題
+  var passwordsData = passwordsSheet.getDataRange().getValues();
+  var content = "密碼錯誤或未找到對應內容";
+
+  for (var i = 1; i < passwordsData.length; i++) { // 從第二行開始遍歷，假設第一行是標題
+    if (passwordsData[i][0] == inputPassword) {
+      content = passwordsData[i][1];
+      break;
+    }
+  }
+  formans.setConfirmationMessage(content);
+}
+
+
+
+
+function setupTrigger() {
+  ScriptApp.newTrigger('onFormSubmit')
+    .forForm(formque)
+    .onFormSubmit()
+    .create();
+} 
